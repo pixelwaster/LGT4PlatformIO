@@ -1,0 +1,41 @@
+{
+  "name": "LogicGreen",
+  "title": "Logic Green AVR",
+  "description": "Logic Green AVR 8-bit MCUs deliver a unique combination of performance, power efficiency and design flexibility. Optimized to speed time to market-and easily adapt to new ones-they are based on the industry's most code-efficient architecture for C and assembly programming",
+  "url": "https://github.com/dbuezas/lgt8fx",
+  "homepage": "https://github.com/dbuezas/lgt8fx",
+  "license": "Apache-2.0",
+  "engines": {
+    "platformio": "<5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dbuezas/lgt8fx.git"
+  },
+  "version": "2.0.0",
+  "packageRepositories": [
+    "https://raw.githubusercontent.com/dbuezas/lgt8fx/master/package_lgt8fx_index.json"
+  ],
+  "frameworks": {
+    "arduino": {
+      "package": "framework-LogicGreen",
+      "script": "builder/frameworks/arduino.py"
+    }
+  },
+  "packages": {
+    "toolchain-atmelavr": {
+      "type": "toolchain",
+      "version": ">=1.70300.191015"
+    },
+    "framework-LogicGreen": {
+      "type": "framework",
+      "optional": true,
+      "version": ">=2.0.0"
+    },
+    "tool-avrdude": {
+      "type": "uploader",
+      "optional": true,
+      "version": "~1.60300.0"
+    }
+  }
+}
