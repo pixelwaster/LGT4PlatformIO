@@ -11,7 +11,7 @@
     "file": "lgt8fx8p/optiboot_lgt8f328p.hex"
   },
   "frameworks": [
-    "arduino"
+    "LogicGreen"
   ],
   "name": "LGT8F328P-wemos-TTGO-XI",
   "upload": {

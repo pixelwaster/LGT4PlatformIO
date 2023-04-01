@@ -11,7 +11,7 @@
     "file": "lgt8fx8e/optiboot_lgt8f328d.hex"
   },
   "frameworks": [
-    "arduino"
+    "LogicGreen"
   ],
   "name": "LGT8F328D",
   "upload": {

@@ -20,6 +20,34 @@ from SCons.Script import (ARGUMENTS, COMMAND_LINE_TARGETS, AlwaysBuild,
 
 from platformio.util import get_serial_ports
 
+
+def BeforeUpload(target, source, env):  # pylint: disable=W0613,W0621
+    upload_options = {}
+    if "BOARD" in env:
+        upload_options = env.BoardConfig().get("upload", {})
+
+    # Deprecated: compatibility with old projects. Use `program` instead
+    if "usb" in env.subst("$UPLOAD_PROTOCOL"):
+        upload_options['require_upload_port'] = False
+        env.Replace(UPLOAD_SPEED=None)
+
+    if env.subst("$UPLOAD_SPEED"):
+        env.Append(UPLOADERFLAGS=["-b", "$UPLOAD_SPEED"])
+
+    # extra upload flags
+    if "extra_flags" in upload_options:
+        env.Append(UPLOADERFLAGS=upload_options.get("extra_flags"))
+
+    # disable erasing by default
+    env.Append(UPLOADERFLAGS=["-D"])
+
+    if upload_options and not upload_options.get("require_upload_port", False):
+        return
+
+    env.AutodetectUploadPort()
+    env.Append(UPLOADERFLAGS=["-P", '"$UPLOAD_PORT"'])
+
+
 env = DefaultEnvironment()
 
 env.Replace(
@@ -117,7 +145,22 @@ env.Replace(
 
 upload_protocol = env.subst("$UPLOAD_PROTOCOL")
 
-env.Replace(
+if upload_protocol == "micronucleus":
+    env.Replace(
+        UPLOADER="micronucleus",
+        UPLOADERFLAGS=[
+            "-c", "$UPLOAD_PROTOCOL",
+            "--timeout", "60"
+        ],
+        UPLOADCMD="$UPLOADER $UPLOADERFLAGS $SOURCES"
+    )
+    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+
+elif upload_protocol == "custom":
+    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+
+else:
+    env.Replace(
         UPLOADER="avrdude",
         UPLOADERFLAGS=[
             "-p", "$BOARD_MCU",
@@ -128,13 +171,15 @@ env.Replace(
         ],
         UPLOADCMD='$UPLOADER $UPLOADERFLAGS -U flash:w:$SOURCES:i',
         UPLOADEEPCMD='$UPLOADER $UPLOADERFLAGS -U eeprom:w:$SOURCES:i'
-)
+    )
 
+    if int(ARGUMENTS.get("PIOVERBOSE", 0)):
+        env.Prepend(UPLOADERFLAGS=["-v"])
 
-upload_actions = [
+    upload_actions = [
         env.VerboseAction(BeforeUpload, "Looking for upload port..."),
         env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE $UPLOADCMD")
-]
+    ]
 
 AlwaysBuild(env.Alias("upload", target_firm, upload_actions))
 

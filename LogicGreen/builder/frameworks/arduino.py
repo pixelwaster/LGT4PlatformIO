@@ -12,15 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Arduino
-
-Arduino Wiring-based Framework allows writing cross-platform software to
-control devices attached to a wide range of Arduino boards to create all
-kinds of creative coding, interactive objects, spaces or physical experiences.
-
-http://arduino.cc/en/Reference/HomePage
-"""
 
 from os.path import isdir, join
 
@@ -120,12 +111,12 @@ if "build.variant" in board:
         ]
     )
     libs.append(env.BuildLibrary(
-        join("$BUILD_DIR", "FrameworkArduinoVariant"),
+        join("$BUILD_DIR", "FrameworkLogicGreenVariant"),
         join(variants_dir, board.get("build.variant"))
     ))
 
 libs.append(env.BuildLibrary(
-    join("$BUILD_DIR", "FrameworkArduino"),
+    join("$BUILD_DIR", "FrameworkLogicGreen"),
     join(FRAMEWORK_DIR, "cores", build_core)
 ))
 
