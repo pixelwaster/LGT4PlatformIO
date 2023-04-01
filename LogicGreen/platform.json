@@ -17,9 +17,9 @@
     "https://raw.githubusercontent.com/dbuezas/lgt8fx/master/package_lgt8fx_index.json"
   ],
   "frameworks": {
-    "arduino": {
+    "LogicGreen": {
       "package": "framework-LogicGreen",
-      "script": "builder/frameworks/arduino.py"
+      "script": "builder/frameworks/logicgreen.py"
     }
   },
   "packages": {
